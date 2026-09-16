@@ -1,0 +1,184 @@
+{
+  "fields": [
+    {
+      "id": "name",
+      "label_ar": "الاسم",
+      "label_en": "Name",
+      "type": "text",
+      "required": false,
+      "placeholder_ar": "اختياري",
+      "placeholder_en": "Optional"
+    },
+    {
+      "id": "age",
+      "label_ar": "العمر",
+      "label_en": "Age",
+      "type": "number",
+      "required": false,
+      "min": 10,
+      "max": 25
+    },
+    {
+      "id": "gender",
+      "label_ar": "الجنس",
+      "label_en": "Gender",
+      "type": "select",
+      "required": false,
+      "options": [
+        { "value": "male", "label_ar": "ذكر", "label_en": "Male" },
+        { "value": "female", "label_ar": "أنثى", "label_en": "Female" }
+      ]
+    },
+    {
+      "id": "residence",
+      "label_ar": "مكان الإقامة",
+      "label_en": "Place of residence",
+      "type": "text",
+      "required": false
+    },
+    {
+      "id": "school_stage",
+      "label_ar": "المرحلة الدراسية",
+      "label_en": "School stage",
+      "type": "select",
+      "required": true,
+      "options": [
+        { "value": "middle", "label_ar": "متوسط", "label_en": "Middle school" },
+        { "value": "high", "label_ar": "ثانوي", "label_en": "High school" }
+      ]
+    },
+    {
+      "id": "school_type",
+      "label_ar": "نوع المدرسة",
+      "label_en": "School type",
+      "type": "select",
+      "required": false,
+      "options": [
+        { "value": "public", "label_ar": "حكومي", "label_en": "Public" },
+        { "value": "private", "label_ar": "أهلي", "label_en": "Private" }
+      ]
+    },
+    {
+      "id": "family_income",
+      "label_ar": "الدخل الشهري للأسرة",
+      "label_en": "Family monthly income",
+      "type": "select",
+      "required": false,
+      "options": [
+        { "value": "under_5000", "label_ar": "أقل من 5000 ريال", "label_en": "Less than 5000 SAR" },
+        { "value": "5000_to_10000", "label_ar": "من 5000 لأقل من 10000 ريال", "label_en": "From 5000 to < 10000 SAR" },
+        { "value": "10000_to_15000", "label_ar": "من عشرة آلاف لأقل من 15 ألف", "label_en": "From 10000 to < 15000 SAR" },
+        { "value": "15000_plus", "label_ar": "15000 ريال فأكثر", "label_en": "15000 SAR or more" }
+      ]
+    },
+    {
+      "id": "birth_order",
+      "label_ar": "ترتيبك بين إخوتك",
+      "label_en": "Student's birth order among siblings",
+      "type": "select",
+      "required": false,
+      "options": [
+        { "value": "first", "label_ar": "الأول", "label_en": "First" },
+        { "value": "middle", "label_ar": "الأوسط", "label_en": "Middle" },
+        { "value": "last", "label_ar": "الأخير", "label_en": "Last" },
+        { "value": "only", "label_ar": "وحيد", "label_en": "Only child" }
+      ]
+    },
+    {
+      "id": "family_members_count",
+      "label_ar": "عدد أفراد الأسرة",
+      "label_en": "Number of family members",
+      "type": "number",
+      "required": false,
+      "min": 1,
+      "max": 30
+    },
+    {
+      "id": "parents_marital_status",
+      "label_ar": "الحالة الاجتماعية للوالدين",
+      "label_en": "Parents' marital status",
+      "type": "select",
+      "required": false,
+      "options": [
+        { "value": "together", "label_ar": "يعيشان معًا", "label_en": "Living together" },
+        { "value": "separated", "label_ar": "منفصلان", "label_en": "Separated" },
+        { "value": "one_deceased", "label_ar": "أحدهما متوفى", "label_en": "One deceased" },
+        { "value": "both_deceased", "label_ar": "كلاهما متوفيان", "label_en": "Both deceased" },
+        { "value": "foster", "label_ar": "أسرة حاضنة", "label_en": "Foster family" }
+      ]
+    },
+    {
+      "id": "father_education",
+      "label_ar": "المستوى التعليمي للأب",
+      "label_en": "Father's education level",
+      "type": "select",
+      "required": false,
+      "options": [
+        { "value": "none", "label_ar": "بدون تعليم", "label_en": "None" },
+        { "value": "primary", "label_ar": "ابتدائي", "label_en": "Primary" },
+        { "value": "middle", "label_ar": "متوسط", "label_en": "Middle" },
+        { "value": "secondary", "label_ar": "ثانوي", "label_en": "Secondary" },
+        { "value": "university", "label_ar": "جامعي", "label_en": "University" },
+        { "value": "postgraduate", "label_ar": "دراسات عليا", "label_en": "Postgraduate" }
+      ]
+    },
+    {
+      "id": "mother_education",
+      "label_ar": "المستوى التعليمي للأم",
+      "label_en": "Mother's education level",
+      "type": "select",
+      "required": false,
+      "options": [
+        { "value": "none", "label_ar": "بدون تعليم", "label_en": "None" },
+        { "value": "primary", "label_ar": "ابتدائي", "label_en": "Primary" },
+        { "value": "middle", "label_ar": "متوسط", "label_en": "Middle" },
+        { "value": "secondary", "label_ar": "ثانوي", "label_en": "Secondary" },
+        { "value": "university", "label_ar": "جامعي", "label_en": "University" },
+        { "value": "postgraduate", "label_ar": "دراسات عليا", "label_en": "Postgraduate" }
+      ]
+    },
+    {
+      "id": "father_occupation",
+      "label_ar": "مهنة الأب",
+      "label_en": "Father's occupation",
+      "type": "select",
+      "required": false,
+      "options": [
+        { "value": "government", "label_ar": "موظف حكومي", "label_en": "Government employee" },
+        { "value": "private", "label_ar": "موظف قطاع خاص", "label_en": "Private sector" },
+        { "value": "freelance", "label_ar": "أعمال حرة", "label_en": "Self-employed" },
+        { "value": "retired", "label_ar": "متقاعد", "label_en": "Retired" },
+        { "value": "unemployed", "label_ar": "لا يعمل", "label_en": "Not working" },
+        { "value": "other", "label_ar": "أخرى", "label_en": "Other" }
+      ]
+    },
+    {
+      "id": "mother_occupation",
+      "label_ar": "مهنة الأم",
+      "label_en": "Mother's occupation",
+      "type": "select",
+      "required": false,
+      "options": [
+        { "value": "homemaker", "label_ar": "ربة منزل", "label_en": "Homemaker" },
+        { "value": "government", "label_ar": "موظفة حكومية", "label_en": "Government employee" },
+        { "value": "private", "label_ar": "موظفة قطاع خاص", "label_en": "Private sector" },
+        { "value": "freelance", "label_ar": "أعمال حرة", "label_en": "Self-employed" },
+        { "value": "retired", "label_ar": "متقاعدة", "label_en": "Retired" },
+        { "value": "unemployed", "label_ar": "لا تعمل", "label_en": "Not working" },
+        { "value": "other", "label_ar": "أخرى", "label_en": "Other" }
+      ]
+    },
+    {
+      "id": "family_mental_health_history",
+      "label_ar": "هل يوجد تاريخ أسري لمشكلات نفسية تطلبت علاجًا أو متابعة؟",
+      "label_en": "Family history of psychological problems needing treatment/follow-up",
+      "type": "select",
+      "required": false,
+      "options": [
+        { "value": "yes", "label_ar": "نعم", "label_en": "Yes" },
+        { "value": "no", "label_ar": "لا", "label_en": "No" },
+        { "value": "dont_know", "label_ar": "لا أعرف", "label_en": "Don't know" }
+      ]
+    }
+  ]
+}

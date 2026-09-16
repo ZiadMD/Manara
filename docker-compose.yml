@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: manara_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: manara
+      POSTGRES_PASSWORD: manara_secret_password_2026
+      POSTGRES_DB: manara_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U manara -d manara_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: manara_backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+asyncpg://manara:manara_secret_password_2026@db:5432/manara_db
+      SYNC_DATABASE_URL: postgresql://manara:manara_secret_password_2026@db:5432/manara_db
+      SECRET_KEY: manara_prod_psychometric_secret_2026
+      ACCESS_TOKEN_EXPIRE_MINUTES: 1440
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

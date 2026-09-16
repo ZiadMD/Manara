@@ -1,0 +1,13 @@
+{
+  "direct_risk_items": [42, 43, 45, 46, 48, 49],
+  "trigger_threshold": 4,
+  "description": "Any item in direct_risk_items with response >= trigger_threshold triggers a special-priority safety flag.",
+  "items_detail": {
+    "42": "تراودني أفكار بإيذاء نفسي عندما أكون تحت ضغط شديد",
+    "43": "أشعر أنني لا أريد الاستمرار في حياتي",
+    "45": "أشعر بأن اختفائي قد يكون أسهل من الاستمرار",
+    "46": "أتعمد إيذاء نفسي عندما أشعر بضيق شديد",
+    "48": "تراودني أفكار بإيذاء نفسي",
+    "49": "أشعر أنني لا أستطيع الاستمرار في حياتي"
+  }
+}
