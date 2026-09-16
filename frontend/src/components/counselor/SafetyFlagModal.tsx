@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import type { SafetyFlag } from '../../types';
 import { request } from '../../api/client';
@@ -20,6 +20,20 @@ export const SafetyFlagModal: React.FC<SafetyFlagModalProps> = ({
   const [notes, setNotes] = useState<string>(flag.notes || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    const previousFocus = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    dialog?.showModal();
+    document.body.style.overflow = 'hidden';
+    return () => {
+      dialog?.close();
+      document.body.style.overflow = previousOverflow;
+      if (previousFocus instanceof HTMLElement) previousFocus.focus();
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,18 +54,23 @@ export const SafetyFlagModal: React.FC<SafetyFlagModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-      <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+    <dialog ref={dialogRef} className="safety-dialog" aria-labelledby="safety-dialog-title"
+      onCancel={(event) => { event.preventDefault(); if (!isSubmitting) onClose(); }}
+      onKeyDown={(event) => { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); if (!isSubmitting) onClose(); } }}>
+      <div className="bg-white">
         
         {/* Modal Header */}
         <div className="p-5 bg-rose-50 border-b border-rose-100 flex items-center justify-between">
           <div className="flex items-center gap-2.5 text-rose-800">
             <ShieldAlert className="w-6 h-6 text-rose-600" />
-            <h3 className="font-bold text-lg">
-              {t('إجراء ومتابعة مؤشر السلامة', 'Safety Indicator Action')}
-            </h3>
+            <h2 id="safety-dialog-title" className="font-medium text-lg">
+              {t('مراجعة مؤشر السلامة', 'Review safety flag')}
+            </h2>
           </div>
           <button
+            type="button"
+            aria-label={t('إغلاق', 'Close')}
+            disabled={isSubmitting}
             onClick={onClose}
             className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-white/60 transition-colors"
           >
@@ -80,10 +99,12 @@ export const SafetyFlagModal: React.FC<SafetyFlagModalProps> = ({
           )}
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
+            <label htmlFor="flag-status" className="block text-sm font-medium text-slate-700 mb-1.5">
               {t('حالة التدخل والإجراء', 'Action / Review Status')}
             </label>
             <select
+              id="flag-status"
+              disabled={isSubmitting}
               value={status}
               onChange={(e) => setStatus(e.target.value)}
               className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500"
@@ -95,10 +116,12 @@ export const SafetyFlagModal: React.FC<SafetyFlagModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
-              {t('ملاحظات المرشد الطلابي والتدخل', 'Counselor Clinical Notes')}
+            <label htmlFor="flag-notes" className="block text-sm font-medium text-slate-700 mb-1.5">
+              {t('ملاحظات المتابعة', 'Follow-up notes')}
             </label>
             <textarea
+              id="flag-notes"
+              disabled={isSubmitting}
               rows={4}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
@@ -113,6 +136,7 @@ export const SafetyFlagModal: React.FC<SafetyFlagModalProps> = ({
           <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-2">
             <button
               type="button"
+              disabled={isSubmitting}
               onClick={onClose}
               className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
             >
@@ -132,6 +156,6 @@ export const SafetyFlagModal: React.FC<SafetyFlagModalProps> = ({
         </form>
 
       </div>
-    </div>
+    </dialog>
   );
 };
