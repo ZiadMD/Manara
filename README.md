@@ -1,4 +1,4 @@
-# Manara (منارة) — Digital Screening Platform for Early Psychological Detection
+# Basira (بصيره) — Digital Screening Platform for Early Psychological Detection
 
 A validated, normed digital screening platform for early detection of psychological-disorder indicators in middle and high school students (المرحلتين المتوسطة والثانوية).
 
