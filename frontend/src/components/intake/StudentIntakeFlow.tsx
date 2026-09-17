@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { DOMAINS, ITEMS } from '../../data/questionnaireData';
 import { InstructionsView } from './InstructionsView';
@@ -30,6 +30,19 @@ export const StudentIntakeFlow: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
   const [completedAssessmentId, setCompletedAssessmentId] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    containerRef.current?.focus({ preventScroll: true });
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [step]);
+
+  useEffect(() => {
+    if (!Object.keys(responses).length || step === 'success') return;
+    const warnBeforeLeaving = (event: BeforeUnloadEvent) => { event.preventDefault(); };
+    window.addEventListener('beforeunload', warnBeforeLeaving);
+    return () => window.removeEventListener('beforeunload', warnBeforeLeaving);
+  }, [responses, step]);
 
   const handleSelectResponse = (itemNumber: number, value: number) => {
     setResponses((prev) => ({ ...prev, [itemNumber]: value }));
@@ -84,34 +97,25 @@ export const StudentIntakeFlow: React.FC = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6">
-      
-      {/* Step Indicator (when taking the assessment) */}
+    <div className="intake-container" ref={containerRef} tabIndex={-1}>
       {step !== 'instructions' && step !== 'success' && (
-        <div className="mb-6 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-500 mb-2">
-            <span>{t('مراحل الاستبيان', 'Screening Progress')}</span>
-            <span>
-              {Object.keys(responses).length} / 61 {t('عبارة مكتملة', 'items answered')}
-            </span>
+        <div className="intake-progress">
+          <div>
+            <span>{t('تقدّم الاستبيان', 'Screening progress')}</span>
+            <span>{Object.keys(responses).length} / {ITEMS.length} {t('عبارة', 'items')}</span>
           </div>
-          <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-            <div
-              className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
-              style={{ width: `${(Object.keys(responses).length / 61) * 100}%` }}
-            />
-          </div>
+          <progress max={ITEMS.length} value={Object.keys(responses).length} aria-label={t('نسبة الإنجاز', 'Completion progress')} />
         </div>
       )}
 
       {submissionError && (
-        <div className="mb-6 p-4 bg-rose-50 border border-rose-200 text-rose-700 font-bold rounded-2xl text-sm">
+        <div role="alert" className="inline-error mb-6">
           {submissionError}
         </div>
       )}
 
       {isSubmitting ? (
-        <div className="my-16 flex flex-col items-center justify-center p-8 bg-white rounded-3xl border border-slate-200 shadow-sm text-center">
+        <div role="status" className="my-16 flex flex-col items-center justify-center p-8 bg-white rounded-xl border border-slate-200 text-center">
           <Loader2 className="w-12 h-12 text-blue-600 animate-spin mb-4" />
           <h3 className="text-xl font-bold text-slate-800">
             {t('جارٍ حفظ إجاباتك بأمان...', 'Safely saving your responses...')}

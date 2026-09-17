@@ -87,7 +87,7 @@ export const StudentProfileReport: React.FC<StudentProfileReportProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="workspace-page space-y-6">
       
       {/* Header bar */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-4">
@@ -131,7 +131,7 @@ export const StudentProfileReport: React.FC<StudentProfileReportProps> = ({
           ) : (
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span>{t('مكتمل طبيعيًا', 'Completed Normally')}</span>
+              <span>{t('لا يوجد تنبيه سلامة آلي', 'No automated safety flag')}</span>
             </div>
           )}
         </div>
@@ -247,8 +247,8 @@ export const StudentProfileReport: React.FC<StudentProfileReportProps> = ({
 
         <div className="p-3.5 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 font-medium">
           {t(
-            'ملاحظة قياسية: لا يتم احتساب أي درجة كلية مجمعة عبر المجالات حفاظًا على دقة التشخيص لكل مؤشر بشكل مستقل.',
-            'Psychometric rule: No total composite score is calculated across domains, preserving independent diagnostic validity for each indicator.'
+            'تُعرض درجات المجالات بشكل مستقل دون درجة كلية مجمعة. نتائج الفرز ليست تشخيصًا ويجب تفسيرها مع تقييم مهني وسياق الطالب.',
+            'Domains are reported independently, without a composite score. Screening results are not diagnoses; interpret them alongside professional assessment and the student’s context.'
           )}
         </div>
       </div>
@@ -270,9 +270,12 @@ export const StudentProfileReport: React.FC<StudentProfileReportProps> = ({
         </div>
       </div>
 
-      {/* Item Responses Detailed Audit Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="p-5 border-b border-slate-100 bg-slate-50/70 flex items-center justify-between">
+      {/* Keep the long audit trail available without overwhelming the overview. */}
+      <details className="workspace-panel report-responses">
+        <summary className="p-5 cursor-pointer text-slate-900">
+          {t('عرض إجابات الطالب — 61 عبارة', 'View student responses — 61 items')}
+        </summary>
+        <div className="p-5 border-b border-slate-100 bg-slate-50/70 flex flex-wrap gap-3 items-center justify-between">
           <div className="flex items-center gap-2 text-slate-900 font-bold text-base">
             <FileCheck className="w-5 h-5 text-blue-600" />
             <span>{t('تفاصيل إجابات الطالب على جميع العبارات (61 عبارة)', 'Detailed Item Responses (All 61 Items)')}</span>
@@ -340,7 +343,7 @@ export const StudentProfileReport: React.FC<StudentProfileReportProps> = ({
             </tbody>
           </table>
         </div>
-      </div>
+      </details>
 
       {/* Safety flag modal */}
       {selectedFlagForEdit && (

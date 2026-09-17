@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "Manara Screening Platform"
+    PROJECT_NAME: str = "Basira Screening Platform"
     API_V1_STR: str = "/api"
     SECRET_KEY: str = os.getenv("SECRET_KEY", "manara_super_secret_psychometric_eval_key_2026")
     ALGORITHM: str = "HS256"

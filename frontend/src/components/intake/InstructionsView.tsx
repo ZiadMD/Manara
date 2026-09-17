@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { INSTRUCTIONS } from '../../data/questionnaireData';
-import { FileText, ArrowLeft, ArrowRight, ShieldCheck, Clock } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 interface InstructionsViewProps {
   onStart: () => void;
@@ -13,82 +13,24 @@ export const InstructionsView: React.FC<InstructionsViewProps> = ({ onStart }) =
   const ArrowIcon = isRtl ? ArrowLeft : ArrowRight;
 
   return (
-    <div className="max-w-3xl mx-auto my-8 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 sm:p-8 text-white">
-        <div className="inline-flex p-3 bg-white/10 rounded-xl mb-4 backdrop-blur-xs">
-          <FileText className="w-8 h-8 text-blue-100" />
-        </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-          {t('مرحبًا بك في استبيان المؤشرات النفسية', 'Welcome to the Psychological Indicator Screening')}
-        </h1>
-        <p className="mt-2 text-blue-100 text-sm sm:text-base leading-relaxed">
-          {t(
-            'نهدف من خلال هذا الاستبيان إلى تقديم الدعم والمساندة لك في بيئتك المدرسية.',
-            'This questionnaire is designed to provide you with supportive psychological guidance in school.'
-          )}
-        </p>
+    <section className="intake-intro">
+      <div className="intro-heading">
+        <p className="eyebrow">{t('مساحة الطالب / قبل أن تبدأ', 'Student space / Before you begin')}</p>
+        <h1>{t('خذ وقتك. إجاباتك تساعدنا على فهمك.', 'Take your time. This is about you.')}</h1>
+        <p>{t('يساعد هذا الاستبيان المرشد الطلابي على فهم تجربتك وتقديم الدعم المناسب. ليس اختبارًا، ولا يعطي تشخيصًا.', 'This questionnaire helps your school counselor understand your experience and offer support. It isn’t a test, and it doesn’t provide a diagnosis.')}</p>
       </div>
-
-      <div className="p-6 sm:p-8 space-y-6">
-        
-        {/* Preserved Verbatim Administration Instructions */}
-        <div className="p-5 bg-blue-50/60 rounded-xl border border-blue-100">
-          <h3 className="text-sm font-bold text-blue-900 uppercase tracking-wider mb-2">
-            {t('تعليمات الإجابة', 'Administration Instructions')}
-          </h3>
-          <p className="text-base sm:text-lg text-slate-800 leading-relaxed font-medium">
-            "{language === 'ar' ? INSTRUCTIONS.ar : INSTRUCTIONS.en}"
-          </p>
-        </div>
-
-        {/* Helpful Highlights */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="p-4 rounded-xl border border-slate-100 bg-slate-50 flex items-start gap-3">
-            <div className="p-2 bg-emerald-100 text-emerald-700 rounded-lg shrink-0 mt-0.5">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-slate-800 text-sm">
-                {t('سرية البيانات', 'Confidential & Safe')}
-              </h4>
-              <p className="text-xs text-slate-600 mt-0.5">
-                {t(
-                  'إجاباتك تراجع بسرية تامة من قِبل المرشد الطلابي المختص فقط.',
-                  'Your responses are confidentially reviewed solely by your qualified school counselor.'
-                )}
-              </p>
-            </div>
-          </div>
-
-          <div className="p-4 rounded-xl border border-slate-100 bg-slate-50 flex items-start gap-3">
-            <div className="p-2 bg-blue-100 text-blue-700 rounded-lg shrink-0 mt-0.5">
-              <Clock className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-slate-800 text-sm">
-                {t('الوقت المقدر', 'Estimated Time')}
-              </h4>
-              <p className="text-xs text-slate-600 mt-0.5">
-                {t(
-                  'يستغرق الاستبيان حوالي 10–15 دقيقة. لا توجد إجابات صحيحة أو خاطئة.',
-                  'Takes around 10–15 minutes. There are no right or wrong answers.'
-                )}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="pt-4 flex justify-end">
-          <button
-            onClick={onStart}
-            className="flex items-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-base rounded-xl shadow-md shadow-blue-200 transition-all cursor-pointer"
-          >
-            <span>{t('بدء الاستبيان', 'Start Screening')}</span>
-            <ArrowIcon className="w-5 h-5" />
-          </button>
-        </div>
-
+      <section className="instruction-copy" aria-labelledby="instructions-title">
+        <h2 id="instructions-title">{t('كيف تجيب', 'How to answer')}</h2>
+        <p>{language === 'ar' ? INSTRUCTIONS.ar : INSTRUCTIONS.en}</p>
+      </section>
+      <div className="intro-facts">
+        <section><h3>{t('١٠–١٥ دقيقة، خمسة أقسام', '10–15 minutes, five sections')}</h3><p>{t('٦١ عبارة عن تجربتك. يمكنك الرجوع لتغيير إجاباتك قبل الإرسال. لا تغلق الصفحة؛ لا يتم حفظ الإجابات قبل الإرسال.', '61 statements about your experience. You can go back to change your answers before submitting. Keep this page open; answers aren’t saved until you submit.')}</p></section>
+        <section><h3>{t('من يراجع إجاباتي؟', 'Who reviews my answers?')}</h3><p>{t('يراجع المرشد الطلابي المشاركات لتقديم الدعم. تعرض لوحة الإدارة إحصاءات مجمعة فقط، وليس إجاباتك الفردية.', 'Your school counselor reviews submissions to offer support. The administration dashboard shows aggregate statistics, not your individual answers.')}</p></section>
       </div>
-    </div>
+      <div className="intake-actions">
+        <p>{t('تحتاج للحديث الآن؟ تواصل مع مرشدك أو شخص بالغ تثق به. لا تنتظر نتيجة الاستبيان لطلب المساعدة.', 'Need to talk now? Reach out to your counselor or a trusted adult. You don’t need to finish the questionnaire to ask for help.')}</p>
+        <button onClick={onStart} className="primary-button"><span>{t('لنبدأ', 'Let’s begin')}</span><ArrowIcon size={18} aria-hidden="true" /></button>
+      </div>
+    </section>
   );
 };

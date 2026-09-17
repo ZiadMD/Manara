@@ -12,13 +12,13 @@ export const SafetyNoticeStep: React.FC<SafetyNoticeStepProps> = ({ onAcknowledg
   const [hasAcknowledged, setHasAcknowledged] = useState(false);
 
   return (
-    <div className="max-w-2xl mx-auto my-8 p-6 sm:p-8 bg-amber-50/80 rounded-2xl border-2 border-amber-300 shadow-md">
+    <section aria-labelledby="safety-title" className="max-w-2xl mx-auto my-8 p-6 sm:p-10 bg-white rounded-xl border border-slate-200 border-t-4 border-t-amber-500">
       <div className="flex items-center gap-3 mb-4 text-amber-800">
         <div className="p-3 bg-amber-100 rounded-xl">
           <HeartHandshake className="w-8 h-8 text-amber-700" />
         </div>
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold">
+          <h2 id="safety-title" className="text-xl sm:text-2xl font-bold">
             {t('تنبيه وإرشاد مهم لسلامتك', 'Important Notice for Your Well-being')}
           </h2>
           <p className="text-xs sm:text-sm text-amber-700">
@@ -56,6 +56,6 @@ export const SafetyNoticeStep: React.FC<SafetyNoticeStepProps> = ({ onAcknowledg
           <span>{t('متابعة إلى القسم التالي', 'Continue to next section')}</span>
         </button>
       </div>
-    </div>
+    </section>
   );
 };

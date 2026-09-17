@@ -43,7 +43,7 @@ export const DemographicsForm: React.FC<DemographicsFormProps> = ({
   };
 
   return (
-    <div className="max-w-3xl mx-auto my-8 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+    <div className="max-w-3xl mx-auto my-4 bg-white rounded-xl border border-slate-200 p-6 sm:p-10 background-form">
       <div className="flex items-center gap-3 pb-6 border-b border-slate-100">
         <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
           <UserCheck className="w-6 h-6" />
@@ -83,7 +83,7 @@ export const DemographicsForm: React.FC<DemographicsFormProps> = ({
                     : ''
                 }
               >
-                <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
+                <label htmlFor={`background-${field.id}`} className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
                   {label}{' '}
                   {isFieldRequired ? (
                     <span className="text-rose-500 font-bold">*</span>
@@ -96,6 +96,8 @@ export const DemographicsForm: React.FC<DemographicsFormProps> = ({
 
                 {field.type === 'select' ? (
                   <select
+                    id={`background-${field.id}`}
+                    required={isFieldRequired}
                     value={value}
                     onChange={(e) => handleChange(field.id, e.target.value)}
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all cursor-pointer"
@@ -111,6 +113,8 @@ export const DemographicsForm: React.FC<DemographicsFormProps> = ({
                   </select>
                 ) : (
                   <input
+                    id={`background-${field.id}`}
+                    required={isFieldRequired}
                     type={field.type}
                     value={value}
                     min={field.min}

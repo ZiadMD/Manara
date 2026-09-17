@@ -71,13 +71,14 @@ export const CounselorDashboard: React.FC = () => {
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+    <div className="workspace-page max-w-7xl mx-auto px-4 sm:px-8 space-y-6">
       
       {/* Top Banner & Refresh */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="page-heading flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900">
-            {t('بوابة المرشد الطلابي', 'Counselor Portal')}
+          <p className="eyebrow mb-3">{t('بصيره / مساحة المرشد', 'Basira / Counselor workspace')}</p>
+          <h1 className="text-2xl sm:text-3xl text-slate-900">
+            {t('الدعم يبدأ بالمتابعة', 'Care starts with a check-in')}
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
             {t(
@@ -104,8 +105,15 @@ export const CounselorDashboard: React.FC = () => {
         </div>
       )}
 
+      {!isLoading && !error && <div className="metric-strip">
+        <div><span>{t('التقييمات المستلمة', 'Check-ins received')}</span><strong>{assessments.length}</strong></div>
+        <div><span>{t('تحتاج مراجعة السلامة', 'Awaiting safety review')}</span><strong>{openFlags.length}</strong></div>
+        <div><span>{t('حالات مصعّدة', 'Escalated cases')}</span><strong>{safetyFlags.filter((flag) => flag.status === 'escalated').length}</strong></div>
+      </div>}
+      {isLoading && <p role="status" className="py-8 text-sm text-slate-500">{t('جارٍ تحميل المشاركات ومؤشرات السلامة…', 'Loading check-ins and safety flags…')}</p>}
+
       {/* Priority 1: Open Safety Flags Queue */}
-      <div className="bg-white rounded-2xl border border-rose-200 shadow-xs overflow-hidden">
+      <div className="workspace-panel" aria-busy={isLoading}>
         <div className="p-5 bg-rose-50/70 border-b border-rose-100 flex items-center justify-between">
           <div className="flex items-center gap-3 text-rose-900">
             <div className="p-2 bg-rose-100 rounded-xl">
@@ -130,7 +138,7 @@ export const CounselorDashboard: React.FC = () => {
 
         {openFlags.length === 0 ? (
           <div className="p-8 text-center text-slate-500 text-sm">
-            {t('لا توجد مؤشرات سلامة مفتوحة حالياً. جميع الحالات مستقرة.', 'No open safety flags. All cases are stable.')}
+            {isLoading ? t('جارٍ التحميل…', 'Loading…') : error ? t('تعذر التحقق من مؤشرات السلامة. أعد المحاولة.', 'Safety flags could not be verified. Please retry.') : t('لا توجد مؤشرات سلامة مفتوحة حاليًا. لا يغني ذلك عن المتابعة المعتادة.', 'No open safety flags at present. Continue routine student follow-up.')}
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -192,7 +200,7 @@ export const CounselorDashboard: React.FC = () => {
       </div>
 
       {/* Priority 2: Student Assessments List */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+      <div className="workspace-panel" aria-busy={isLoading}>
         <div className="p-5 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Users className="w-5 h-5 text-blue-600" />
@@ -208,7 +216,8 @@ export const CounselorDashboard: React.FC = () => {
           <div className="relative w-full sm:w-72">
             <Search className="w-4 h-4 text-slate-400 absolute top-3 start-3" />
             <input
-              type="text"
+              type="search"
+              aria-label={t('البحث بالاسم أو المرحلة', 'Search by name or school stage')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('بحث بالاسم أو المرحلة...', 'Search by name or stage...')}
@@ -220,7 +229,7 @@ export const CounselorDashboard: React.FC = () => {
         {filteredAssessments.length === 0 ? (
           <div className="p-12 text-center text-slate-400">
             <Users className="w-12 h-12 mx-auto mb-2 opacity-30" />
-            <p className="text-sm">{t('لا توجد تقييمات مسجلة تطابق البحث', 'No assessments found')}</p>
+            <p className="text-sm">{isLoading ? t('جارٍ تحميل المشاركات…', 'Loading check-ins…') : error ? t('تعذر تحميل المشاركات. أعد المحاولة.', 'Check-ins could not be loaded. Please retry.') : searchQuery ? t('لا توجد نتائج تطابق البحث. جرّب اسمًا أو مرحلة أخرى.', 'No matching check-ins. Try another name or stage.') : t('لم تُستلم أي مشاركة بعد. ستظهر المشاركات المكتملة هنا.', 'No check-ins yet. Completed submissions will appear here.')}</p>
           </div>
         ) : (
           <div className="overflow-x-auto">

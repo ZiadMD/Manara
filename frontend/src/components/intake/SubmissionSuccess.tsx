@@ -14,7 +14,7 @@ export const SubmissionSuccess: React.FC<SubmissionSuccessProps> = ({
   const { t } = useLanguage();
 
   return (
-    <div className="max-w-2xl mx-auto my-12 bg-white rounded-3xl border border-slate-200 shadow-md p-8 sm:p-12 text-center">
+    <div className="max-w-2xl mx-auto my-10 bg-white rounded-xl border border-slate-200 p-8 sm:p-12 text-center" role="status">
       <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
         <CheckCircle className="w-12 h-12" />
       </div>

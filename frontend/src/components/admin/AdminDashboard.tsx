@@ -12,7 +12,6 @@ import {
   Lock,
   CheckCircle,
   AlertTriangle,
-  FileCheck2,
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
@@ -26,6 +25,7 @@ export const AdminDashboard: React.FC = () => {
   const [configThreshold, setConfigThreshold] = useState<number>(4);
   const [configSaveSuccess, setConfigSaveSuccess] = useState<boolean>(false);
   const [isSavingConfig, setIsSavingConfig] = useState<boolean>(false);
+  const [configError, setConfigError] = useState<string | null>(null);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -51,14 +51,16 @@ export const AdminDashboard: React.FC = () => {
 
   const handleSaveConfig = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSavingConfig(true);
     setConfigSaveSuccess(false);
+    setConfigError(null);
+    const parts = configItemsStr.split(',').map((part) => part.trim());
+    const parsedItems = parts.map(Number);
+    if (parts.some((part) => !/^\d+$/.test(part)) || parsedItems.some((item) => item < 1 || item > 61) || new Set(parsedItems).size !== parsedItems.length) {
+      setConfigError(t('أدخل أرقامًا فريدة من 1 إلى 61 مفصولة بفواصل.', 'Enter unique whole item numbers from 1 to 61, separated by commas.'));
+      return;
+    }
+    setIsSavingConfig(true);
     try {
-      const parsedItems = configItemsStr
-        .split(',')
-        .map((s) => parseInt(s.trim(), 10))
-        .filter((n) => !isNaN(n) && n >= 1 && n <= 61);
-
       const updated = await request<SafetyConfig>('/admin/safety-config', {
         method: 'PUT',
         body: JSON.stringify({
@@ -69,9 +71,8 @@ export const AdminDashboard: React.FC = () => {
       setConfigItemsStr(updated.direct_risk_items.join(', '));
       setConfigThreshold(updated.trigger_threshold);
       setConfigSaveSuccess(true);
-      setTimeout(() => setConfigSaveSuccess(false), 3000);
     } catch (err: any) {
-      alert(err.message || 'Failed to update safety config');
+      setConfigError(err.message || t('تعذر حفظ إعدادات السلامة.', 'Could not save safety settings.'));
     } finally {
       setIsSavingConfig(false);
     }
@@ -89,13 +90,14 @@ export const AdminDashboard: React.FC = () => {
   const domainsList = ['anxiety', 'depression', 'behavior', 'self_harm', 'school_maladjustment'];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+    <div className="workspace-page max-w-7xl mx-auto px-4 sm:px-8 space-y-6">
       
       {/* Title & Refresh */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="page-heading flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900">
-            {t('لوحة الإدارة والإحصاءات المجمعة', 'Admin Aggregate Analytics')}
+          <p className="eyebrow mb-3">{t('بصيره / إدارة المدرسة', 'Basira / School administration')}</p>
+          <h1 className="text-2xl sm:text-3xl text-slate-900">
+            {t('صورة أوضح لاحتياجات الطلاب', 'Understand the bigger picture')}
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
             {t(
@@ -121,37 +123,16 @@ export const AdminDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* Strict Privacy Assurance Banner */}
-      <div className="p-4 bg-slate-900 text-white rounded-2xl flex items-start sm:items-center justify-between gap-4 shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-white/10 rounded-xl">
-            <Lock className="w-5 h-5 text-emerald-400" />
-          </div>
-          <div>
-            <div className="text-sm font-bold flex items-center gap-2">
-              <span>{t('ضمان الخصوصية وحماية بيانات القُصّر', 'Privacy & Data Protection Assurance')}</span>
-              <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">
-                {t('مفعل برمجياً', 'Enforced by Design')}
-              </span>
-            </div>
-            <p className="text-xs text-slate-300 mt-0.5">
-              {t(
-                'وفقًا للمواصفة القياسية: تقتصر صلاحية الإدارة على المؤشرات الإحصائية المجمعة دون أي وصول إلى بيانات الطلاب النفسية الفردية.',
-                'Admin access is strictly restricted to de-identified aggregate metrics. Individual psychological records are restricted to qualified counselors.'
-              )}
-            </p>
-          </div>
-        </div>
-      </div>
+      <aside className="flex items-start gap-3 text-sm text-slate-600 max-w-3xl leading-relaxed">
+        <Lock className="w-4 h-4 mt-1 shrink-0" aria-hidden="true" />
+        <p>{t('تعرض هذه المساحة إحصاءات مجمعة فقط، ولا تعرض إجابات الطلاب الفردية. مؤشرات الفرز تساعد على التخطيط للدعم وليست تشخيصًا.', 'This workspace shows aggregate statistics, not individual student responses. Screening trends support planning; they are not diagnoses.')}</p>
+      </aside>
 
-      {/* Summary Stat Cards */}
+      {/* Aggregate overview */}
       {metrics && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="admin-overview grid grid-cols-1 sm:grid-cols-3">
           <div className="p-5 bg-white rounded-2xl border border-slate-200 shadow-xs">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold text-slate-500 uppercase">{t('إجمالي التقييمات', 'Total Assessments')}</span>
-              <FileCheck2 className="w-5 h-5 text-blue-600" />
-            </div>
+            <span className="text-xs text-slate-500">{t('إجمالي التقييمات', 'Total assessments')}</span>
             <div className="text-3xl font-black text-slate-900 font-mono">
               {metrics.total_assessments}
             </div>
@@ -296,8 +277,9 @@ export const AdminDashboard: React.FC = () => {
           </div>
         </div>
 
+        {configError && <p id="config-error" role="alert" className="inline-error mb-4">{configError}</p>}
         {configSaveSuccess && (
-          <div className="mb-4 p-3 bg-emerald-50 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-200 flex items-center gap-2">
+          <div role="status" className="mb-4 p-3 bg-emerald-50 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-200 flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-emerald-600" />
             <span>{t('تم حفظ التعديلات وتحديث قواعد السلامة بنجاح.', 'Safety configuration saved successfully.')}</span>
           </div>
@@ -305,13 +287,19 @@ export const AdminDashboard: React.FC = () => {
 
         <form onSubmit={handleSaveConfig} className="space-y-4 max-w-2xl">
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
-              {t('أرقام بنود الخطر المباشر (مفصولة بفواصل)', 'Direct-Risk Candidate Items (comma-separated)')}
+            <label htmlFor="risk-items" className="block text-sm font-medium text-slate-700 mb-1">
+              {t('أرقام بنود الخطر المباشر (مفصولة بفواصل)', 'Direct-risk items (comma-separated)')}
             </label>
             <input
+              id="risk-items"
               type="text"
+              dir="ltr"
+              required
+              disabled={isSavingConfig || !!errorMessage}
+              aria-invalid={!!configError}
+              aria-describedby={configError ? 'config-error' : undefined}
               value={configItemsStr}
-              onChange={(e) => setConfigItemsStr(e.target.value)}
+              onChange={(e) => { setConfigItemsStr(e.target.value); setConfigSaveSuccess(false); setConfigError(null); }}
               className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500"
               placeholder="42, 43, 45, 46, 48, 49"
             />
@@ -324,12 +312,14 @@ export const AdminDashboard: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
-              {t('حد عتبة الاستجابة لتفعيل التنبيه (Threshold)', 'Triggering Response Threshold')}
+            <label htmlFor="risk-threshold" className="block text-sm font-medium text-slate-700 mb-1">
+              {t('حد عتبة الاستجابة لتفعيل التنبيه', 'Triggering response threshold')}
             </label>
             <select
+              id="risk-threshold"
+              disabled={isSavingConfig || !!errorMessage}
               value={configThreshold}
-              onChange={(e) => setConfigThreshold(parseInt(e.target.value, 10))}
+              onChange={(e) => { setConfigThreshold(Number(e.target.value)); setConfigSaveSuccess(false); }}
               className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500"
             >
               <option value={3}>{t('3 أو أكثر (أحيانًا، كثيرًا، دائمًا)', '3 or higher (Sometimes, Often, Always)')}</option>
@@ -340,7 +330,7 @@ export const AdminDashboard: React.FC = () => {
 
           <button
             type="submit"
-            disabled={isSavingConfig}
+            disabled={isSavingConfig || !!errorMessage}
             className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors cursor-pointer"
           >
             <ShieldCheck className="w-4 h-4" />
